@@ -1,24 +1,21 @@
-hosted at netlify (temporarily)
-  https://dreamy-williams-8bd9a7.netlify.app/
+## hosted at netlify (temporarily): [Oven_baked_restaurant_webapp](https://dreamy-williams-8bd9a7.netlify.app/)
 
-for customer: 
-  https://dreamy-williams-8bd9a7.netlify.app/login
+for customer: _a@gmail.com : password_
 
-  a@gmail.com : password
+for admin: _admin@gmail.com : password_
 
-for admin:
-  https://dreamy-williams-8bd9a7.netlify.app/login
-
-  admin@gmail.com : password
-
-  https://dreamy-williams-8bd9a7.netlify.app/orders
-
-for delivery guy: 
+for delivery guy: _b@gmail.com : password_
   
-  b@gmail.com : password 
-  
-  name: b delivery boy
+## **made with reactJS, Redux, Firebase**
 
-  https://dreamy-williams-8bd9a7.netlify.app/orders_to_pickup
+Features: 
+- responsive
+- user friendly
+- using functional components
+- realtime firestore database
 
-All these(customer, admin, delivery_guy) can work in real time :)
+To test:
+  -you can use three tabs
+    -1st for customer
+    -2nd for receptionist(who will receive orders/admin side)
+    -3rd for delivery guy (who will deliver the orders)
