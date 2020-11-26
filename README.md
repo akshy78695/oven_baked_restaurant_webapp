@@ -15,7 +15,11 @@ Features:
 - realtime firestore database
 
 To test:
+
   -you can use three tabs
+    
     -1st for customer
-    -2nd for receptionist(who will receive orders/admin side)
+    
+    -2nd for receptionist (who will receive orders/admin side)
+    
     -3rd for delivery guy (who will deliver the orders)
