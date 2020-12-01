@@ -1,10 +1,13 @@
-## hosted at netlify (temporarily): [Oven_baked_restaurant_webapp](https://dreamy-williams-8bd9a7.netlify.app/)
+## hosted at Firebase: [Oven_baked_restaurant_webapp](https://oven-baked-pizza-store.web.app/)
 
-for customer: _a@gmail.com : password_
+for customer: 
+  _a@gmail.com : password_
 
-for admin: _admin@gmail.com : password_
+for admin (who'll accept order): 
+  _admin@gmail.com : password_ 
 
-for delivery guy: _b@gmail.com : password_
+for delivery guy (see order/s after accepted by restaurant): 
+  _b@gmail.com : password_
   
 ## **made with reactJS, Redux, Firebase**
 
@@ -13,6 +16,7 @@ Features:
 - user friendly
 - using functional components
 - realtime firestore database
+- PWA supportable (with score of Fast and reliable: 3/3, Installabe: 3/3, Optimized: 8/8)
 
 To test:
 
@@ -22,4 +26,4 @@ To test:
     
     -2nd for receptionist (who will receive orders/admin side)
     
-    -3rd for delivery guy (who will deliver the orders)
+    -3rd for delivery guy (who will deliver the orders after accepted by restaurant)
