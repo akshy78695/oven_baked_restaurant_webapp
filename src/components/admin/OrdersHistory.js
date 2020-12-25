@@ -7,7 +7,6 @@ import {
 } from "../helpers/timeDifference";
 
 const OrdersHistory = () => {
-    console.log(howMuchTimeAgo(2005601));
     useFirestoreConnect([
         {
             collection: "delivered_orders",
@@ -15,21 +14,33 @@ const OrdersHistory = () => {
             storeAs: "deliveredOrders",
         },
     ]);
-    const orders = useSelector(
-        (state) =>
+    const { orders, requesting } = useSelector((state) => ({
+        orders:
             state.firestore.ordered.deliveredOrders &&
-            state.firestore.ordered.deliveredOrders
-    );
-    console.log(orders);
+            state.firestore.ordered.deliveredOrders,
+        requesting: state.firestore.status.requesting.deliveredOrders,
+    }));
     return (
         <div className="container" style={{ marginTop: "50px" }}>
             <div className="row">
-                <div className="col-md-7 mx-auto">
+                <div className="col-md-8 col-lg-7 mx-auto">
                     <div className="card">
                         <div className="card-body">
                             <div className="my-3 text-center h4">
                                 Orders History
                             </div>
+                            {requesting && !orders && (
+                                <div className="text-center my-5">
+                                    <div className="spinner-grow">
+                                        <span className="sr-only">
+                                            Loading...
+                                        </span>
+                                    </div>
+                                    <div className="text-muted mt-2">
+                                        Orders
+                                    </div>
+                                </div>
+                            )}
                             {orders &&
                                 orders.length > 0 &&
                                 orders.map((order) => {
@@ -66,7 +77,7 @@ const OrdersHistory = () => {
                                     return (
                                         <div
                                             className="card my-2"
-                                            key={order.id}
+                                            key={order.uniqueID}
                                         >
                                             <div className="card-body">
                                                 <div className="">
@@ -95,7 +106,7 @@ const OrdersHistory = () => {
                                                                     (item) => (
                                                                         <div
                                                                             key={
-                                                                                item.id
+                                                                                item.uniqueId
                                                                             }
                                                                             className="media mt-2"
                                                                         >

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import cuid from "cuid";
 import Alert from "./Alert";
+import { useEffect } from "react";
 
 const PizzaToast = () => {
     const [selectValue, setSelectValue] = useState("small");
@@ -19,7 +20,6 @@ const PizzaToast = () => {
 
     const addToCart = () => {
         try {
-            console.log(Object.keys(pizza.price).length);
             let obj = { ...pizza };
             if (pizza.type === "veg") obj.isVeg = true;
             else if (pizza.type === "non-veg") obj.isVeg = false;
@@ -55,6 +55,7 @@ const PizzaToast = () => {
             }
             // console.log(obj);
             dispatch({ type: "ADD_ITEM_TO_CART", payload: { ...obj } });
+            dispatch({ type: "SET_PIZZA_ADDED", payload: true });
             dispatch({ type: "HIDE_TOAST" });
             dispatch({ type: "HIDE_ALERT" });
         } catch (error) {
@@ -87,6 +88,15 @@ const PizzaToast = () => {
         setSelectValue(e.target.value);
         dispatch({ type: "HIDE_ALERT" });
     };
+    useEffect(() => {
+        if (pizza.price) {
+            if (pizza.price.small && !pizza.price.medium && !pizza.price.large)
+                setSelectValue("small");
+            if (!pizza.price.small) setSelectValue("medium");
+            if (!pizza.price.small && !pizza.price.medium)
+                setSelectValue("large");
+        }
+    }, [pizza.price]);
     return (
         <div className="row">
             <div className="col-md-5 ml-md-3">

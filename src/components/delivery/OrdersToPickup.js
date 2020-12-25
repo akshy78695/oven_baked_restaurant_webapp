@@ -9,6 +9,7 @@ const OrdersToPickup = () => {
     const [loading, setLoading] = useState(false);
     const [isNoOrders, setIsNoOrders] = useState(false);
     const firestore = useFirestore();
+    console.log(loading);
     useFirestoreConnect([
         {
             collection: "orders",
@@ -23,11 +24,9 @@ const OrdersToPickup = () => {
         uid: state.firebase.auth.uid,
         profile: state.firebase.profile,
     }));
-    console.log(orders);
     const onOrderAccept = async (userUid, orderId) => {
         let { phone, email, name, uniqueId } = profile;
         let obj = { name, email, phone, uid, uniqueId };
-        console.log(obj);
         setLoading(true);
         try {
             await firestore.collection("orders").doc(userUid).update({
@@ -47,7 +46,23 @@ const OrdersToPickup = () => {
             setLoading(false);
         }
     };
-    const onOrderCancel = null;
+    // const onOrderCancel = async (userUid, orderId) => {
+    //     let temp = `ignoredBy${uid}`;
+    //     let obj = { [temp]: true };
+    //     try {
+    //         await firestore.collection("orders").doc(userUid).update(obj);
+    //         await firestore
+    //             .collection("user_orders")
+    //             .doc(userUid)
+    //             .collection("all_orders")
+    //             .doc(orderId)
+    //             .update(obj)
+    //             .then(() => setLoading(false));
+    //     } catch (error) {
+    //         console.log(error);
+    //         setLoading(false);
+    //     }
+    // };
     const onOrderPickedUp = async (userUid, orderId) => {
         try {
             await firestore
@@ -146,6 +161,7 @@ const OrdersToPickup = () => {
         }, 3600000);
 
         return () => clearInterval(refreshInterval);
+        //eslint-disable-next-line
     }, [refresh, orders]);
     return (
         <div className="container" style={{ marginTop: "60px" }}>
@@ -171,7 +187,7 @@ const OrdersToPickup = () => {
                             {((orders && orders.length === 0) ||
                                 isNoOrders) && (
                                 <div className="my-5 text-muted text-center font-italic h6">
-                                    [ Sorry no orders for you at this moment. ]
+                                    [Sorry no orders for you at this moment.]
                                 </div>
                             )}
 
@@ -193,7 +209,8 @@ const OrdersToPickup = () => {
                                         (Object.keys(deliveryPerson).length ===
                                             0 ||
                                             (deliveryPerson &&
-                                                deliveryPerson.email === email))
+                                                deliveryPerson.email ===
+                                                    email))
                                     ) {
                                         //full address
                                         let {
@@ -250,7 +267,7 @@ const OrdersToPickup = () => {
                                                                     (item) => (
                                                                         <div
                                                                             key={
-                                                                                item.id
+                                                                                item.uniqueId
                                                                             }
                                                                             className="media mt-2"
                                                                         >
@@ -309,10 +326,11 @@ const OrdersToPickup = () => {
                                                             {state} {zip_code}
                                                         </div>
                                                     </div>
+                                                    <hr className="my-2" />
                                                     {Object.keys(deliveryPerson)
                                                         .length === 0 && (
                                                         <div className="btn-group btn-block my-2">
-                                                            <div
+                                                            <button
                                                                 className="btn btn-info"
                                                                 onClick={() =>
                                                                     onOrderAccept(
@@ -322,18 +340,18 @@ const OrdersToPickup = () => {
                                                                 }
                                                             >
                                                                 Accept
-                                                            </div>
-                                                            <div
+                                                            </button>
+                                                            <button
                                                                 className="btn btn-danger"
-                                                                onClick={() =>
-                                                                    onOrderCancel(
-                                                                        userUid,
-                                                                        uniqueID
-                                                                    )
-                                                                }
+                                                                // onClick={() =>
+                                                                //     onOrderCancel(
+                                                                //         userUid,
+                                                                //         uniqueID
+                                                                //     )
+                                                                // }
                                                             >
                                                                 Decline
-                                                            </div>
+                                                            </button>
                                                         </div>
                                                     )}
                                                     {Object.keys(deliveryPerson)

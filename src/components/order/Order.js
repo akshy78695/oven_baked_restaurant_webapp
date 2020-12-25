@@ -1,7 +1,6 @@
 import React from "react";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useFirebase, useFirestore } from "react-redux-firebase";
+import { useFirestore } from "react-redux-firebase";
 import Cancelled from "./Cancelled";
 import Cooking from "./Cooking";
 import Delivered from "./Delivered";
@@ -33,7 +32,7 @@ const Order = ({ history }) => {
                 .collection("user_orders")
                 .doc(auth.uid)
                 .collection("all_orders")
-                .doc(order[0].id)
+                .doc(order[0].uniqueID)
                 .update({ isCancelledByUser: true });
         }
     };

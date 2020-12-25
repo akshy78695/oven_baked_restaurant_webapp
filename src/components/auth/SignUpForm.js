@@ -5,15 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFirebase } from "react-redux-firebase";
 import Alert from "../layout/Alert";
 
-const SignUpForm = ({ history }) => {
+const SignUpForm = ({ history, authIsEmpty }) => {
     const [credential, setCredential] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false);
     const [passwordKaStrength, setPasswordKaStrength] = useState("");
 
     const firebase = useFirebase();
+
     const dispatch = useDispatch();
 
-    const alert = useSelector((state) => state.alert);
+    const { alert } = useSelector((state) => ({
+        alert: state.alert && state.alert,
+    }));
 
     const { email, password } = credential;
     const onChange = (e) => {
@@ -61,10 +64,34 @@ const SignUpForm = ({ history }) => {
                     type: "SET_ALERT",
                     payload: { message: "Email is already in use" },
                 });
+            } else if (error.code === "auth/network-request-failed") {
+                dispatch({
+                    type: "SET_ALERT",
+                    payload: { message: "Make sure internet working." },
+                });
             }
             setLoading(false);
         }
     };
+    if (!authIsEmpty) {
+        return (
+            <div>
+                <div className="text-center my-5">
+                    <div className="h5 text-secondary">
+                        You are logged in, Please log out.
+                    </div>
+                    <div>
+                        <button
+                            className="btn btn-warning btn-lg my-3"
+                            onClick={() => history.goBack()}
+                        >
+                            Go back
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     return (
         <div>
             <div className="text-center h2 text-warning mt-4 ">Sign up</div>

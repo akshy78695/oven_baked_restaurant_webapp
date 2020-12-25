@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useFirestore, useFirestoreConnect } from "react-redux-firebase";
 import UserSingleOrder from "./UserSingleOrder";
+import "./settingsStyles.css";
 
 const FavoriteOrders = ({ auth, userUid, history }) => {
     useFirestoreConnect([
@@ -19,61 +20,75 @@ const FavoriteOrders = ({ auth, userUid, history }) => {
         },
     ]);
     const firestore = useFirestore();
-    const { allOrders } = useSelector((state) => ({
-        allOrders:
-            state.firestore.ordered.all_orders &&
-            state.firestore.ordered.all_orders,
+    const { allOrders, requesting } = useSelector((state) => ({
+        allOrders: state.firestore.ordered.favorite_orders,
+        requesting: state.firestore.status.requesting.favorite_orders,
     }));
-    console.log(allOrders);
     const onSetOrderFavorite = async (isOrderFavorite, orderId) => {
         console.log(isOrderFavorite);
-        if (isOrderFavorite === undefined || isOrderFavorite === false)
+        if (isOrderFavorite === undefined || isOrderFavorite === false) {
             await firestore
                 .collection("user_orders")
                 .doc(userUid)
                 .collection("all_orders")
                 .doc(orderId)
                 .update({ isOrderFavorite: true });
-        else if (isOrderFavorite === true)
+            //show toast
+            let x = document.getElementById("snackbar");
+            x.className = "show";
+            x.innerHTML = "Set as favorite";
+            setTimeout(function () {
+                x.className = x.className.replace("show", "");
+            }, 1700);
+        } else if (isOrderFavorite === true) {
             await firestore
                 .collection("user_orders")
                 .doc(userUid)
                 .collection("all_orders")
                 .doc(orderId)
                 .update({ isOrderFavorite: false });
+            //show toast
+            let x = document.getElementById("snackbar");
+            x.className = "show";
+            x.innerHTML = "Removed from favorite";
+            setTimeout(function () {
+                x.className = x.className.replace("show", "");
+            }, 1700);
+        }
     };
     return (
-        <div className="card ">
+        <div className="card borderForOrders">
             <div className="h4 text-center text-secondary mt-2">
-                Order history
+                Favorite orders
             </div>
-            <div className="card-body">
-                {allOrders === undefined ? (
+            <div className="card-body px-0 px-md-3">
+                {requesting && !allOrders && (
                     <div className="text-center my-4">
                         <div className="spinner-border spinner-border-success">
                             <span className="sr-only">Loading...</span>
                         </div>
                     </div>
-                ) : allOrders && allOrders.length > 0 ? (
+                )}
+                {allOrders &&
+                    allOrders.length > 0 &&
                     allOrders.map((order) => {
                         const { uniqueID } = order;
-                        if (order.isOrderFavorite)
-                            return (
-                                <UserSingleOrder
-                                    order={order}
-                                    onSetOrderFavorite={onSetOrderFavorite}
-                                    history={history}
-                                    key={uniqueID}
-                                />
-                            );
-                        else return null;
-                    })
-                ) : (
+                        return (
+                            <UserSingleOrder
+                                order={order}
+                                onSetOrderFavorite={onSetOrderFavorite}
+                                history={history}
+                                key={uniqueID}
+                            />
+                        );
+                    })}
+                {allOrders && allOrders.length === 0 && (
                     <div className="text-center my-4 text-muted font-italic">
-                        You don't have any order history.
+                        You didn't marked any favorite order.
                     </div>
                 )}
             </div>
+            <div id="snackbar"></div>
         </div>
     );
 };

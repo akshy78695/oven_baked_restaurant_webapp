@@ -15,13 +15,27 @@ const VegPizza = () => {
             storeAs: "veg",
         },
     ]);
-    const vegPizzas = useSelector(
-        (state) => state.firestore.ordered && state.firestore.ordered.veg
-    );
-    const { isAdmin } = useSelector((state) => state.helper && state.helper);
+    const { vegPizzas } = useSelector((state) => ({
+        vegPizzas: state.firestore.ordered && state.firestore.ordered.veg,
+    }));
+    const { isAdmin, pizzaAdded } = useSelector((state) => ({
+        isAdmin: state.helper.isAdmin && state.helper.isAdmin,
+        pizzaAdded: state.helper.pizzaAdded,
+    }));
     useEffect(() => {
-        window.scrollTo({ top: 0 });
-    }, []);
+        if (pizzaAdded) {
+            //show toast
+            let x = document.getElementById("snackbar");
+            x.className = "show";
+            x.innerHTML = "Added to your cart.";
+            setTimeout(function () {
+                x.className = x.className.replace("show", "");
+            }, 1700);
+            dispatch({ type: "SET_PIZZA_ADDED", payload: false });
+        }
+        //eslint-disable-next-line
+    }, [pizzaAdded]);
+    useEffect(() => window.scrollTo({ top: 0 }), []);
     return (
         <div>
             <DisplayPhoto
@@ -64,11 +78,12 @@ const VegPizza = () => {
                                 {pizza.description}.
                             </div>
                             <div className="h6 text-secondary mt-2 mb-3">
-                                {pizza.price.small && (
-                                    <span className="text-success  ">
-                                        ₹{pizza.price.small}/
-                                    </span>
-                                )}
+                                {pizza.price.small &&
+                                    pizza.price.small !== undefined && (
+                                        <span className="text-success  ">
+                                            ₹{pizza.price.small}/
+                                        </span>
+                                    )}
                                 {pizza.price.medium && (
                                     <span className="text-primary">
                                         ₹{pizza.price.medium}/
@@ -98,8 +113,13 @@ const VegPizza = () => {
                         </div>
                     ))}
             </div>
-            <hr/>
+            <hr />
             <PizzaToast />
+            {/* //toast */}
+            <div
+                id="snackbar"
+                style={{ backgroundColor: "rgb(88, 139, 64)" }}
+            ></div>
         </div>
     );
 };

@@ -1,0 +1,19 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "all_orders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isOrderFavorite",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "paymentTime",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

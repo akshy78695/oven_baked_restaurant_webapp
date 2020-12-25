@@ -241,7 +241,7 @@ const Orders = () => {
                                                                     (item) => (
                                                                         <div
                                                                             key={
-                                                                                item.id
+                                                                                item.uniqueId
                                                                             }
                                                                             className="media mt-2"
                                                                         >

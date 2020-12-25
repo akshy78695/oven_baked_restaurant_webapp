@@ -44,6 +44,23 @@ const PizzaMania = () => {
     //             });
     //     }
     // };
+    const { isAdmin, pizzaAdded } = useSelector((state) => ({
+        isAdmin: state.helper.isAdmin && state.helper.isAdmin,
+        pizzaAdded: state.helper.pizzaAdded,
+    }));
+    useEffect(() => {
+        if (pizzaAdded) {
+            //show toast
+            let x = document.getElementById("snackbar");
+            x.className = "show";
+            x.innerHTML = "Added to your cart.";
+            setTimeout(function () {
+                x.className = x.className.replace("show", "");
+            }, 1700);
+            dispatch({ type: "SET_PIZZA_ADDED", payload: false });
+        }
+        //eslint-disable-next-line
+    }, [pizzaAdded]);
     useEffect(() => {
         window.scrollTo({ top: 0 });
     }, []);
@@ -165,19 +182,22 @@ const PizzaMania = () => {
                                                     </span>
                                                 )}
                                             </div>
-                                            <div className="text-success mt-2 mb-3">
-                                                <button
-                                                    className="btn btn-outline-success"
-                                                    onClick={() =>
-                                                        dispatch({
-                                                            type: "SHOW_TOAST",
-                                                            payload: pizza,
-                                                        })
-                                                    }
-                                                >
-                                                    Get this one
-                                                </button>
-                                            </div>
+                                            {!isAdmin && (
+                                                <div className="text-success mt-2 mb-3">
+                                                    <button
+                                                        className="btn btn-outline-success"
+                                                        onClick={() =>
+                                                            dispatch({
+                                                                type:
+                                                                    "SHOW_TOAST",
+                                                                payload: pizza,
+                                                            })
+                                                        }
+                                                    >
+                                                        Get this one
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
                                     )
                             )}
@@ -227,19 +247,22 @@ const PizzaMania = () => {
                                                     </span>
                                                 )}
                                             </div>
-                                            <div className="text-danger mt-2 mb-3">
-                                                <button
-                                                    className="btn btn-outline-danger"
-                                                    onClick={() =>
-                                                        dispatch({
-                                                            type: "SHOW_TOAST",
-                                                            payload: pizza,
-                                                        })
-                                                    }
-                                                >
-                                                    Get this one
-                                                </button>
-                                            </div>
+                                            {!isAdmin && (
+                                                <div className="text-danger mt-2 mb-3">
+                                                    <button
+                                                        className="btn btn-outline-danger"
+                                                        onClick={() =>
+                                                            dispatch({
+                                                                type:
+                                                                    "SHOW_TOAST",
+                                                                payload: pizza,
+                                                            })
+                                                        }
+                                                    >
+                                                        Get this one
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
                                     )
                             )}
@@ -247,8 +270,14 @@ const PizzaMania = () => {
                     <hr />
                 </div>
             </div>
-            <hr/>
+            <hr />
             <PizzaToast />
+
+            {/* //toast */}
+            <div
+                id="snackbar"
+                style={{ backgroundColor: "rgb(204, 204, 0)" }}
+            ></div>
         </div>
     );
 };

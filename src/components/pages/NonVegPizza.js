@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import DisplayPhoto from "../layout/DisplayPhoto";
-import {  useFirestoreConnect } from "react-redux-firebase";
+import { useFirestoreConnect } from "react-redux-firebase";
 import { useSelector, useDispatch } from "react-redux";
 import PizzaToast from "../layout/PizzaToast";
 
@@ -42,6 +42,23 @@ const NonVegPizza = () => {
     //             });
     //     }
     // };
+    const { isAdmin, pizzaAdded } = useSelector((state) => ({
+        isAdmin: state.helper.isAdmin && state.helper.isAdmin,
+        pizzaAdded: state.helper.pizzaAdded,
+    }));
+    useEffect(() => {
+        if (pizzaAdded) {
+            //show toast
+            let x = document.getElementById("snackbar");
+            x.className = "show";
+            x.innerHTML = "Added to your cart.";
+            setTimeout(function () {
+                x.className = x.className.replace("show", "");
+            }, 1700);
+            dispatch({ type: "SET_PIZZA_ADDED", payload: false });
+        }
+        //eslint-disable-next-line
+    }, [pizzaAdded]);
     useEffect(() => {
         window.scrollTo({ top: 0 });
     }, []);
@@ -104,24 +121,29 @@ const NonVegPizza = () => {
                                     </span>
                                 )}
                             </div>
-                            <div className="text-danger mt-2 mb-3">
-                                <button
-                                    className="btn btn-outline-danger"
-                                    onClick={() =>
-                                        dispatch({
-                                            type: "SHOW_TOAST",
-                                            payload: pizza,
-                                        })
-                                    }
-                                >
-                                    Get this one
-                                </button>
-                            </div>
+                            {!isAdmin && (
+                                <div className="text-danger mt-2 mb-3">
+                                    <button
+                                        className="btn btn-outline-danger"
+                                        onClick={() =>
+                                            dispatch({
+                                                type: "SHOW_TOAST",
+                                                payload: pizza,
+                                            })
+                                        }
+                                    >
+                                        Get this one
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     ))}
             </div>
-            <hr/>
+            <hr />
             <PizzaToast />
+
+            {/* //toast */}
+            <div id="snackbar" style={{backgroundColor:"rgb(139, 64, 64)"}}></div>
         </div>
     );
 };

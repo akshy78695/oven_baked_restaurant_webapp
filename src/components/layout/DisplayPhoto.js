@@ -25,12 +25,16 @@ const DisplayPhoto = ({
             <img
                 src={photoForLgSize || "/images/pizzabg.jpg"}
                 alt=""
-                className="img-fluid d-none d-md-block w-100"
+                className="img-fluid d-none d-md-block"
+                width="100%"
+                height="auto"
             />
             <img
                 src={photoForSmSize || "/images/pizzabgsm.jpg"}
                 alt=""
-                className="img-fluid d-block d-sm-block d-md-none w-100"
+                className="img-fluid d-block d-sm-block d-md-none"
+                width="100%"
+                height="auto"
             />
             {/* <div className="bottom-right-text">Bottom right</div> */}
             {isButton && (

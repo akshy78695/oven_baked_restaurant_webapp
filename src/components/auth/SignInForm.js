@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Alert from "../layout/Alert";
 
-const SignInForm = ({ history }) => {
+const SignInForm = ({ history, authIsEmpty }) => {
     const [credential, setCredential] = useState({ email: "", password: "" });
     const [adminCode, setAdminCode] = useState("");
     const [loading, setLoading] = useState(false);
@@ -17,7 +17,6 @@ const SignInForm = ({ history }) => {
     const redirectToCart = useSelector(
         (state) => state.helper && state.helper.redirectToCart
     );
-
     const onChange = (e) => {
         if (e.target.name !== "adminCode") {
             if (e.target.name === "email")
@@ -41,6 +40,9 @@ const SignInForm = ({ history }) => {
         }
     };
     const onSubmit = async (e) => {
+        if (alert.message) {
+            dispatch({ type: "HIDE_ALERT" });
+        }
         setLoading(true);
         e.preventDefault();
         try {
@@ -73,11 +75,35 @@ const SignInForm = ({ history }) => {
                     type: "SET_ALERT",
                     payload: { message: "Invalid Credentials" },
                 });
+            } else if (error.code === "auth/network-request-failed") {
+                dispatch({
+                    type: "SET_ALERT",
+                    payload: { message: "Make sure internet working." },
+                });
             }
             setLoading(false);
         }
     };
     const { email, password } = credential;
+    if (!authIsEmpty) {
+        return (
+            <div>
+                <div className="text-center my-5">
+                    <div className="h5 text-secondary">
+                        You are already logged in
+                    </div>
+                    <div>
+                        <button
+                            className="btn btn-warning btn-lg my-3"
+                            onClick={() => history.goBack()}
+                        >
+                            Go back
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="mt-4">
             <div className="text-center h2">

@@ -27,6 +27,7 @@ const UserInfoPage = ({ history }) => {
         if (redirectToAddress) {
             dispatch({ type: "SET_REDIRECT_TO_ADDRESS", payload: false });
         }
+        //eslint-disable-next-line
     }, [user_profile, redirectToAddress]);
 
     if (cart && cart.length > 0) {

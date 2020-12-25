@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import cuid from "cuid";
-import { useFirebase, useFirestore } from "react-redux-firebase";
+import { useFirestore } from "react-redux-firebase";
 import Alert from "../layout/Alert";
 const months = [
     "Jan",
@@ -22,14 +22,13 @@ const months = [
 const PaymentOption = ({ history }) => {
     const [loading, setLoading] = useState(false);
     const firestore = useFirestore();
-    const firebase = useFirebase();
     const dispatch = useDispatch();
     const cart = useSelector((state) => state.cart && state.cart.pizzaInCart);
-    const { address, totalBill } = useSelector(
+    const { address, totalBill, pickupByHimself } = useSelector(
         (state) => state.helper && state.helper
     );
     const alert = useSelector((state) => state.alert);
-    const { auth, profile, email } = useSelector((state) => ({
+    const { auth, profile } = useSelector((state) => ({
         auth: state.firebase.auth,
         profile: state.firebase.profile,
         email: state.firebase.profile.email,
@@ -77,9 +76,20 @@ const PaymentOption = ({ history }) => {
             minutes: temp.getMinutes(),
             seconds: temp.getSeconds(),
         };
-        obj.deliveryPerson = {};
+        if (pickupByHimself) {
+            let { name, email, phone } = profile;
+            let { uid } = auth;
+            obj.deliveryPerson = {
+                name,
+                email,
+                phone,
+                uid,
+                uniqueId: obj.uniqueID,
+            };
+        } else {
+            obj.deliveryPerson = {};
+        }
         obj.writable = true;
-        console.log(obj);
         try {
             await firestore.collection("orders").doc(auth.uid).set(obj);
             await firestore
@@ -113,18 +123,6 @@ const PaymentOption = ({ history }) => {
                             <div className="h5 pb-0 px-3 pt-3 ">
                                 Choose payment method
                             </div>
-                            <button
-                                onClick={() => {
-                                    cart.filter((item) => {
-                                        if (item.userUid === undefined)
-                                            return (item.userUid = auth.uid);
-                                        else return item;
-                                    });
-                                    console.log(cart);
-                                }}
-                            >
-                                click
-                            </button>
                         </div>
                         <div className="card-body px-0">
                             {alert && alert.message && <Alert />}
@@ -164,15 +162,15 @@ const PaymentOption = ({ history }) => {
                                         WebkitTextStrokeWidth: "0",
                                     }}
                                 >
-                                    Credit card
+                                    Card
                                 </a>
                                 <a
                                     className="nav-link"
-                                    id="Debit-card-tab"
+                                    id="upi-tab"
                                     data-toggle="pill"
-                                    href="#Debit-card"
+                                    href="#upi"
                                     role="tab"
-                                    aria-controls="Debit-card"
+                                    aria-controls="upi"
                                     aria-selected="false"
                                     style={{
                                         fontWeight: "normal",
@@ -180,7 +178,7 @@ const PaymentOption = ({ history }) => {
                                         WebkitTextStrokeWidth: "0",
                                     }}
                                 >
-                                    Debit card
+                                    UPI
                                 </a>
                             </div>
                             <div
@@ -234,11 +232,8 @@ const PaymentOption = ({ history }) => {
                                     aria-labelledby="credit-card-tab"
                                 >
                                     <form>
-                                        <div
-                                            role="alert"
-                                            className="alert mb-0 text-center alert-light"
-                                        >
-                                            !Not available right now
+                                        <div className="text-center my-2 text-muted">
+                                            !Not available right now.
                                         </div>
                                         <div className="form-group">
                                             <input
@@ -318,90 +313,32 @@ const PaymentOption = ({ history }) => {
                                 </div>
                                 <div
                                     className="tab-pane fade"
-                                    id="Debit-card"
+                                    id="upi"
                                     role="tabpanel"
-                                    aria-labelledby="Debit-card-tab"
+                                    aria-labelledby="upi-tab"
                                 >
                                     <form>
-                                        <div
-                                            role="alert"
-                                            className="alert mb-0 text-center alert-light"
-                                        >
-                                            !Not available right now
+                                        <div className="text-center my-2 text-muted">
+                                            !Not available right now.
                                         </div>
-                                        <div className="form-group">
+                                        <div className="form-group  ">
+                                            <label htmlFor="id">
+                                                <span className="ml-2">
+                                                    your upi ID:
+                                                </span>
+                                            </label>
                                             <input
                                                 type="text"
-                                                placeholder="Card holder name"
-                                                name="name"
-                                                className="form-control form-control-lg mt-2"
+                                                className="form-control"
+                                                placeholder="e.g. your-number @-upi"
                                                 disabled
                                             />
-                                        </div>
-                                        <div className="form-group">
-                                            <input
-                                                type="number"
-                                                name="number"
-                                                placeholder="Card number"
-                                                className="form-control form-control-lg mt-2"
-                                                disabled
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <div className="row">
-                                                <div className="col">
-                                                    <label htmlFor="expiry-date">
-                                                        expiry date
-                                                    </label>
-                                                    <input
-                                                        type="month"
-                                                        value="2024-04"
-                                                        className="form-control"
-                                                        name="expiry"
-                                                        id="expiry-date"
-                                                        disabled
-                                                    />
-                                                </div>
-                                                <div className="col">
-                                                    <label
-                                                        htmlFor="cvv"
-                                                        className=""
-                                                        style={{
-                                                            fontSize: "12px",
-                                                        }}
-                                                    >
-                                                        CVV
-                                                    </label>
-                                                    <input
-                                                        type="number"
-                                                        className="form-control"
-                                                        name="cvv"
-                                                        id="cvv"
-                                                        disabled
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="form-group ml-3">
-                                            <input
-                                                type="checkbox"
-                                                name=""
-                                                className="form-check-input"
-                                                id="save-card"
-                                                disabled
-                                            />
-                                            <label
-                                                htmlFor="save-card"
-                                                className="form-check-label"
-                                            >
-                                                Save card for faster checkout
-                                            </label>
                                         </div>
                                         <button
                                             className="mt-3 btn btn-block btn-outline-dark"
                                             disabled
                                         >
-                                            pay ₹ {totalBill}
+                                            Verify and pay ₹ {totalBill}
                                         </button>
                                     </form>
                                 </div>

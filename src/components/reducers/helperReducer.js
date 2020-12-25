@@ -10,6 +10,8 @@ const initialState = {
     deliveryCharge: 30,
     isAdmin: null,
     orderToRepeat: [],
+    pizzaAdded: false,
+    pickupByHimself: null,
     productsNotRequireCheese: [
         "Butterscotch Mousse Cake",
         "Cheese Jalapeno Dip",
@@ -41,6 +43,10 @@ export default (state = initialState, { type, payload }) => {
             return { ...state, isAdmin: payload };
         case "SET_ORDER_TO_REPEAT":
             return { ...state, orderToRepeat: payload };
+        case "SET_PIZZA_ADDED":
+            return { ...state, pizzaAdded: payload };
+        case "SET_PICKUP_BY_HIMSELF":
+            return { ...state, pickupByHimself: payload };
         default:
             return state;
     }

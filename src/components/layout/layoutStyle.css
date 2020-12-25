@@ -100,14 +100,6 @@
     -webkit-text-stroke-width: 0;
     -webkit-text-stroke-color: white;
 }
-#orderButton {
-    display: block;
-}
-@media only screen and (min-device-width: 1011px) and (max-device-width: 1250px) {
-    #orderButton {
-        display: none;
-    }
-}
 @media only screen and (min-width: 513px) {
     .custom-card:hover {
         box-shadow: rgba(2, 8, 20, 0.1) 0px 0.35em 1.175em,

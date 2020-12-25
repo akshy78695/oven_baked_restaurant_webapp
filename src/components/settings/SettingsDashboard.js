@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import SettingsNavbar from "./SettingsNavbar";
 import { Switch, Route, Redirect } from "react-router-dom";
 import BasicSettings from "./BasicSettings";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AddressSettings from "./AddressSettings";
 import AccountSettings from "./AccountSettings";
 import YourOrders from "./YourOrders";
 import FavoriteOrders from "./FavoriteOrders";
+import DeliveredOrders from "./DeliveredOrders";
 
-const getWindowWidth = () => {
-    const { innerWidth: width } = window;
-    return width;
-};
+// const getWindowWidth = () => {
+//     const { innerWidth: width } = window;
+//     return width;
+// };
 const SettingsDashboard = ({ location, history }) => {
     const { auth, profile } = useSelector(
         (state) => state.firebase && state.firebase
@@ -35,7 +36,10 @@ const SettingsDashboard = ({ location, history }) => {
                 <div className="row">
                     <div className="col-md-4 d-none d-md-block">
                         {isAdmin !== null && (
-                            <SettingsNavbar pathname={location.pathname} />
+                            <SettingsNavbar
+                                pathname={location.pathname}
+                                profile={profile}
+                            />
                         )}
                     </div>
                     <div className="col-md-8">
@@ -95,6 +99,20 @@ const SettingsDashboard = ({ location, history }) => {
                                         />
                                     )}
                                 />
+                                {profile && profile.isDeliveryPerson && (
+                                    <Route
+                                        exact
+                                        path="/settings/delivered_orders"
+                                        render={() => (
+                                            <DeliveredOrders
+                                                auth={auth}
+                                                userUid={userUid}
+                                                profile={profile}
+                                                history={history}
+                                            />
+                                        )}
+                                    />
+                                )}
                             </Switch>
                         )}
                     </div>

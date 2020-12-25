@@ -1,13 +1,11 @@
-import React, { Fragment } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import { Link } from "react-router-dom";
 import RightChevron from "../svg's/RightChevron";
 
-const SettingsNavbar = ({ pathname }) => {
-    const { isAdmin } = useSelector((state) => state.helper && state.helper);
+const SettingsNavbar = ({ pathname, profile }) => {
     return (
-        <div>
-            <div className="list-group">
+        <div className="sticky-top" style={{ top: "55px" }}>
+            <div className="list-group border-0">
                 <Link
                     to="/settings/basic"
                     className="list-group-item text-decoration-none d-flex align-items-center justify-content-between"
@@ -47,6 +45,21 @@ const SettingsNavbar = ({ pathname }) => {
                         </span>
                     )}
                 </Link>
+                {profile.isDeliveryPerson && (
+                    <Link
+                        to="/settings/delivered_orders"
+                        className="list-group-item text-decoration-none d-flex align-items-center justify-content-between"
+                    >
+                        Delivered orders
+                        {(pathname === "/settings/delivered_orders" ||
+                            pathname === "/_settings" ||
+                            pathname === "/_settings/") && (
+                            <span>
+                                <RightChevron />
+                            </span>
+                        )}
+                    </Link>
+                )}
                 <Link
                     to="/settings/address"
                     className="list-group-item text-decoration-none d-flex align-items-center justify-content-between"

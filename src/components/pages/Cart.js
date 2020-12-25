@@ -23,11 +23,9 @@ const Cart = ({ history }) => {
         (state) => state.firebase.auth && state.firebase.auth
     );
     const cart = useSelector((state) => state.cart.pizzaInCart);
-    console.log(cart);
     const order = useSelector(
         (state) => state.firestore && state.firestore.ordered.userOrder
     );
-    console.log(order);
     const orderLoading = useSelector(
         (state) =>
             state.firestore && state.firestore.status.requesting.userOrder

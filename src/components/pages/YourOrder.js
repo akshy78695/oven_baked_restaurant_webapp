@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Redirect, Link } from "react-router-dom";
 import { useEffect } from "react";
 
-const YourOrder = () => {
+const YourOrder = ({ history }) => {
     const dispatch = useDispatch();
 
     const {
@@ -13,7 +13,21 @@ const YourOrder = () => {
         GST,
         deliveryCharge,
     } = useSelector((state) => state.helper && state.helper);
-    const cart = useSelector((state) => state.cart && state.cart.pizzaInCart);
+    const { cart, profile } = useSelector((state) => ({
+        cart: state.cart && state.cart.pizzaInCart,
+        profile: state.firebase.profile,
+    }));
+    const onChoosePayment = () => {
+        if (profile.isDeliveryPerson) {
+            document.getElementById("modalButton").click();
+        } else {
+            return history.push("/payment_option");
+        }
+    };
+    const onPickupByDeliveryGuy = (payload) => {
+        dispatch({ type: "SET_PICKUP_BY_HIMSELF", payload });
+        return history.push("/payment_option");
+    };
     useEffect(() => {
         if (totalBill === 0) {
             if (cart) {
@@ -143,14 +157,91 @@ const YourOrder = () => {
                                 </div>
                             )}
                             <div className="text-center mb-4 mx-2 mx-md-3">
-                                <Link
-                                    to="payment_option"
-                                    className="text-decoration-none"
+                                <button
+                                    className="btn btn-block btn-outline-dark"
+                                    onClick={onChoosePayment}
                                 >
-                                    <button className="btn btn-block btn-outline-dark">
-                                        Choose Payment Method
+                                    Choose Payment Method
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        id="modalButton"
+                        data-toggle="modal"
+                        data-target="#assignEarlyDeliveryGuy"
+                        style={{ visibility: "hidden" }}
+                    >
+                        Launch static backdrop modal
+                    </button>
+                    <div
+                        className="modal fade"
+                        id="assignEarlyDeliveryGuy"
+                        data-backdrop="static"
+                        tabIndex="-1"
+                        role="dialog"
+                        aria-labelledby="staticBackdropLabel"
+                        aria-hidden="true"
+                    >
+                        <div
+                            className="modal-dialog modal-sm modal-dialog-centered"
+                            role="document"
+                            style={{ maxWidth: "370px" }}
+                        >
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5
+                                        className="modal-title"
+                                        id="staticBackdropLabel"
+                                    >
+                                        Warning
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        className="close"
+                                        data-dismiss="modal"
+                                        aria-label="Close"
+                                    >
+                                        <span aria-hidden="true">&times;</span>
                                     </button>
-                                </Link>
+                                </div>
+                                <div className="modal-body">
+                                    <div className="h6">
+                                        <span className="text-secondary">
+                                            Are you going to pick this order at
+                                            restaurant by yourself?
+                                        </span>
+                                        <br />
+                                        <span className="h6 text-warning">
+                                            (As you are one of our delivery
+                                            guy.)
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        data-dismiss="modal"
+                                        onClick={() =>
+                                            onPickupByDeliveryGuy(false)
+                                        }
+                                    >
+                                        Nah
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        data-dismiss="modal"
+                                        onClick={() =>
+                                            onPickupByDeliveryGuy(true)
+                                        }
+                                    >
+                                        Sure
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

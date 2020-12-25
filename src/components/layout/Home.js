@@ -17,8 +17,9 @@ const Home = () => {
         if (moveToMenu) {
             dispatch({ type: "SET_MOVE_TO_MENU", payload: false });
         }
-    });
-    console.log(isDeliveryPerson);
+
+        //eslint-disable-next-line
+    }, []);
     return (
         <div>
             <DisplayPhoto isButton={true} clickOrder={moveToMenu} />
@@ -32,10 +33,7 @@ const Home = () => {
             {isDeliveryPerson && (
                 <Link to="/orders_to_pickup">
                     {true && (
-                        <div
-                            className="floating_button_intro h6"
-                            onAnimationEndCapture={console.log("ended")}
-                        >
+                        <div className="floating_button_intro h6">
                             <div>Orders</div>
                             <div>
                                 <svg

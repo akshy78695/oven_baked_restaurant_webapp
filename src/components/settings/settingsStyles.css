@@ -1,40 +1,6 @@
-.basic-grid-for-veg {
-    display: grid;
-    gap: 1rem;
-
-    grid-template-columns: repeat(12, 1fr);
-
-    grid-template-columns: repeat(12, minmax(240px, 1fr));
-
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    /* grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); */
-}
-.custom-card-for-veg {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /* font-size: 3rem; */
-    color: #fff;
-    box-shadow: rgba(3, 8, 20, 0.1) 0px 0.15rem 0.5rem,
-        rgba(2, 8, 20, 0.1) 0px 0.075rem 0.175rem;
-    height: 100%;
-    width: 90%;
-    /* max-width: 250px; */
-    margin: auto;
-    border-radius: 4px;
-    transition: all 500ms;
-    overflow: hidden;
-
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-@media only screen and (min-width: 513px) {
-    .custom-card-for-veg:hover {
-        box-shadow: rgba(2, 8, 20, 0.1) 0px 0.35em 1.175em,
-            rgba(2, 8, 20, 0.08) 0px 0.175em 0.5em;
-        transform: translateY(-3px) scale(1.1);
+@media only screen and (max-width: 767px) {
+    .borderForOrders {
+        border: none;
     }
 }
 
@@ -43,7 +9,7 @@
     visibility: hidden; /* Hidden by default. Visible on click */
     min-width: 250px; /* Set a default minimum width */
     margin-left: -125px; /* Divide value of min-width by 2 */
-    /* background-color: rgb(245, 242, 65); */
+    background-color: rgb(139, 64, 64); /* Black background color */
     border-radius: 30px;
     color: #fff; /* White text color */
     text-align: center; /* Centered text */
