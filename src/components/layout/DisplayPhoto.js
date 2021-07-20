@@ -1,6 +1,7 @@
 import React from "react";
 import {useEffect} from "react";
 import "./layoutStyle.css";
+
 const DisplayPhoto = ({
 	photoForLgSize,
 	photoForSmSize,
@@ -21,14 +22,6 @@ const DisplayPhoto = ({
 	}, [clickOrder]);
 	return (
 		<div className="img-container">
-			{/* <LazyLoadImage
-				src={photoForLgSize || "/images/pizzabg.jpg"}
-				alt="Display Image"
-				className="img-fluid d-none d-md-block"
-				width="100%"
-				height="auto"
-				effect="opacity"
-			/> */}
 			<img
 				src={photoForLgSize || "/images/pizzabg.jpg"}
 				alt="display-lg"
