@@ -1,289 +1,300 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import DisplayPhoto from "../layout/DisplayPhoto";
-import { useFirestoreConnect } from "react-redux-firebase";
-import { useSelector, useDispatch } from "react-redux";
+import {useFirestoreConnect} from "react-redux-firebase";
+import {useSelector, useDispatch} from "react-redux";
 import PizzaToast from "../layout/PizzaToast";
-
+import {LazyLoadImage} from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 const SideBeverages = () => {
-    const dispatch = useDispatch();
-    useFirestoreConnect([
-        {
-            collection: "products",
-            where: ["type", "==", "side-beverages"],
-            storeAs: "side_beverages",
-        },
-    ]);
-    const sideBeverages = useSelector(
-        (state) =>
-            state.firestore.ordered.side_beverages &&
-            state.firestore.ordered.side_beverages
-    );
-    // const onClick = async (e) => {
-    //     let obj = {};
-    //     obj.name = sideBeverages[15].name;
-    //     obj.description = sideBeverages[15].desc || "";
-    //     obj.price = sideBeverages[15].price;
-    //     obj.type = "side-beverages";
-    //     obj.isVeg = sideBeverages[15].isVeg;
-    //     const storage = firebase.storage();
-    //     const storageRef = storage.ref();
-    //     const starRef = storageRef.child(
-    //         `product_images/${sideBeverages[15].name}.jpg`
-    //     );
-    //     starRef
-    //         .getDownloadURL()
-    //         .then(async (url) => {
-    //             obj.imageURL = url;
-    //             console.log(obj);
-    //             await firestore.collection("products").add(obj);
-    //         })
-    //         .catch((e) => {
-    //             console.log(e);
-    //             console.log(obj.name);
-    //         });
-    // };
-    const { isAdmin, pizzaAdded } = useSelector((state) => ({
-        isAdmin: state.helper.isAdmin && state.helper.isAdmin,
-        pizzaAdded: state.helper.pizzaAdded,
-    }));
-    useEffect(() => {
-        if (pizzaAdded) {
-            //show toast
-            let x = document.getElementById("snackbar");
-            x.className = "show";
-            x.innerHTML = "Added to your cart.";
-            setTimeout(function () {
-                x.className = x.className.replace("show", "");
-            }, 1700);
-            dispatch({ type: "SET_PIZZA_ADDED", payload: false });
-        }
-        //eslint-disable-next-line
-    }, [pizzaAdded]);
-    useEffect(() => {
-        window.scrollTo({ top: 0 });
-    }, []);
-    return (
-        <div>
-            <DisplayPhoto
-                photoForLgSize="/images/side-bavarages-lg-1280x521.jpg"
-                photoForSmSize="/images/side-beverages-sm-960x1055.jpg"
-            />
-            <div className="h2 text-center mt-5 mb-3 text-info">
-                Side Beverages
-            </div>
-            {/* <button onClick={onClick}>Click</button> */}
-            {sideBeverages === undefined && (
-                <div className="text-center mb-4">
-                    <div
-                        className="spinner-border text-info"
-                        style={{
-                            marginTop: "40px",
-                            width: "2.5rem",
-                            height: "2.5rem",
-                        }}
-                    >
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>
-            )}
-            {sideBeverages !== undefined && (
-                <ul
-                    className="nav nav-tabs ml-2 mb-3"
-                    id="myTab"
-                    role="tablist"
-                >
-                    <li className="nav-item">
-                        <a
-                            className="nav-link font-weight-normal active text-success"
-                            id="veg-tab"
-                            data-toggle="tab"
-                            href="#veg"
-                            role="tab"
-                            aria-controls="home"
-                            aria-selected="true"
-                        >
-                            <div className="d-flex align-items-center">
-                                Veg
-                                <span className="ml-2">
-                                    <img
-                                        src="https://img.icons8.com/color/20/000000/vegetarian-food-symbol.png"
-                                        alt=""
-                                    />
-                                </span>
-                            </div>
-                        </a>
-                    </li>
-                    <li className="nav-item">
-                        <a
-                            className="nav-link font-weight-normal text-danger"
-                            id="non-veg-tab"
-                            data-toggle="tab"
-                            href="#non-veg"
-                            role="tab"
-                            aria-controls="profile"
-                            aria-selected="false"
-                        >
-                            <div className="d-flex align-items-center">
-                                Non-Veg
-                                <span className="ml-2">
-                                    <img
-                                        src="https://img.icons8.com/color/20/000000/non-vegetarian-food-symbol.png"
-                                        alt=""
-                                    />
-                                </span>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            )}
-            <div className="tab-content" id="myTabContent">
-                <div
-                    className="tab-pane fade show active"
-                    id="veg"
-                    role="tabpanel"
-                    aria-labelledby="veg-tab"
-                >
-                    <div className="basic-grid-for-veg">
-                        {sideBeverages &&
-                            sideBeverages.map(
-                                (food) =>
-                                    food.isVeg && (
-                                        <div
-                                            key={food.id}
-                                            className="card custom-card-for-veg border-success"
-                                        >
-                                            <img
+	const dispatch = useDispatch();
+	useFirestoreConnect([
+		{
+			collection: "products",
+			where: ["type", "==", "side-beverages"],
+			storeAs: "side_beverages",
+		},
+	]);
+	const sideBeverages = useSelector(
+		(state) =>
+			state.firestore.ordered.side_beverages &&
+			state.firestore.ordered.side_beverages
+	);
+	// const onClick = async (e) => {
+	//     let obj = {};
+	//     obj.name = sideBeverages[15].name;
+	//     obj.description = sideBeverages[15].desc || "";
+	//     obj.price = sideBeverages[15].price;
+	//     obj.type = "side-beverages";
+	//     obj.isVeg = sideBeverages[15].isVeg;
+	//     const storage = firebase.storage();
+	//     const storageRef = storage.ref();
+	//     const starRef = storageRef.child(
+	//         `product_images/${sideBeverages[15].name}.jpg`
+	//     );
+	//     starRef
+	//         .getDownloadURL()
+	//         .then(async (url) => {
+	//             obj.imageURL = url;
+	//             console.log(obj);
+	//             await firestore.collection("products").add(obj);
+	//         })
+	//         .catch((e) => {
+	//             console.log(e);
+	//             console.log(obj.name);
+	//         });
+	// };
+	const {isAdmin, pizzaAdded} = useSelector((state) => ({
+		isAdmin: state.helper.isAdmin && state.helper.isAdmin,
+		pizzaAdded: state.helper.pizzaAdded,
+	}));
+	useEffect(() => {
+		if (pizzaAdded) {
+			//show toast
+			let x = document.getElementById("snackbar");
+			x.className = "show";
+			x.innerHTML = "Added to your cart.";
+			setTimeout(function () {
+				x.className = x.className.replace("show", "");
+			}, 1700);
+			dispatch({type: "SET_PIZZA_ADDED", payload: false});
+		}
+		//eslint-disable-next-line
+	}, [pizzaAdded]);
+	useEffect(() => {
+		window.scrollTo({top: 0});
+	}, []);
+	return (
+		<div>
+			<DisplayPhoto
+				photoForLgSize="/images/side-bavarages-lg-1280x521.jpg"
+				photoForSmSize="/images/side-beverages-sm-960x1055.jpg"
+			/>
+			<div className="h2 text-center mt-5 mb-3 text-info">
+				Side Beverages
+			</div>
+			{/* <button onClick={onClick}>Click</button> */}
+			{sideBeverages === undefined && (
+				<div className="text-center mb-4">
+					<div
+						className="spinner-border text-info"
+						style={{
+							marginTop: "40px",
+							width: "2.5rem",
+							height: "2.5rem",
+						}}
+					>
+						<span className="sr-only">Loading...</span>
+					</div>
+				</div>
+			)}
+			{sideBeverages !== undefined && (
+				<ul
+					className="nav nav-tabs ml-2 mb-3"
+					id="myTab"
+					role="tablist"
+				>
+					<li className="nav-item">
+						<a
+							className="nav-link font-weight-normal active text-success"
+							id="veg-tab"
+							data-toggle="tab"
+							href="#veg"
+							role="tab"
+							aria-controls="home"
+							aria-selected="true"
+						>
+							<div className="d-flex align-items-center">
+								Veg
+								<span className="ml-2">
+									<img
+										src="https://img.icons8.com/color/20/000000/vegetarian-food-symbol.png"
+										alt=""
+									/>
+								</span>
+							</div>
+						</a>
+					</li>
+					<li className="nav-item">
+						<a
+							className="nav-link font-weight-normal text-danger"
+							id="non-veg-tab"
+							data-toggle="tab"
+							href="#non-veg"
+							role="tab"
+							aria-controls="profile"
+							aria-selected="false"
+						>
+							<div className="d-flex align-items-center">
+								Non-Veg
+								<span className="ml-2">
+									<img
+										src="https://img.icons8.com/color/20/000000/non-vegetarian-food-symbol.png"
+										alt=""
+									/>
+								</span>
+							</div>
+						</a>
+					</li>
+				</ul>
+			)}
+			<div className="tab-content" id="myTabContent">
+				<div
+					className="tab-pane fade show active"
+					id="veg"
+					role="tabpanel"
+					aria-labelledby="veg-tab"
+				>
+					<div className="basic-grid-for-veg">
+						{sideBeverages &&
+							sideBeverages.map(
+								(food) =>
+									food.isVeg && (
+										<div
+											key={food.id}
+											className="card custom-card-for-veg border-success"
+										>
+											<LazyLoadImage
+												src={food.imageURL}
+												alt={food.name}
+												className="card-img-top"
+												effect="blur"
+											/>
+											{/* <img
                                                 // src={`/images/side_orders/${food.name}.jpg`}
                                                 src={food.imageURL}
                                                 alt=""
                                                 className="card-img-top"
-                                            />
-                                            <div className="text-danger h6">
-                                                {food.name}
-                                            </div>
-                                            {food.description && (
-                                                <div className="text-muted font-weight-light h6 mx-1">
-                                                    {food.description}.
-                                                </div>
-                                            )}
-                                            <div className="h6 text-secondary my-2">
-                                                {food.price.small && (
-                                                    <span className="text-success  ">
-                                                        ₹{food.price.small}/
-                                                    </span>
-                                                )}
-                                                {food.price.medium && (
-                                                    <span className="text-primary">
-                                                        ₹{food.price.medium}/
-                                                    </span>
-                                                )}
-                                                {food.price.large && (
-                                                    <span className="text-danger">
-                                                        ₹{food.price.large}
-                                                    </span>
-                                                )}
-                                            </div>
-                                            {!isAdmin && (
-                                                <div className="text-success mt-2 mb-3">
-                                                    <button
-                                                        className="btn btn-outline-success"
-                                                        onClick={() =>
-                                                            dispatch({
-                                                                type:
-                                                                    "SHOW_TOAST",
-                                                                payload: food,
-                                                            })
-                                                        }
-                                                    >
-                                                        Get this one
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )
-                            )}
-                    </div>
-                </div>
-                <div
-                    className="tab-pane fade"
-                    id="non-veg"
-                    role="tabpanel"
-                    aria-labelledby="non-veg-tab"
-                >
-                    <div className="basic-grid-for-veg">
-                        {sideBeverages &&
-                            sideBeverages.map(
-                                (food) =>
-                                    !food.isVeg && (
-                                        <div
-                                            key={food.id}
-                                            className="card custom-card-for-veg border-success"
-                                        >
-                                            <img
-                                                // src={
-                                                //     `/images/side_orders/${food.name}.jpg` ||
-                                                //     `/images/side_orders/${food.name}.png`
-                                                // }
-                                                src={food.imageURL}
-                                                alt=""
-                                                className="card-img-top"
-                                            />
-                                            <div className="text-danger h6">
-                                                {food.name}
-                                            </div>
-                                            {food.description && (
-                                                <div className="text-muted font-weight-light h6 mx-1">
-                                                    {food.description}.
-                                                </div>
-                                            )}
-                                            <div className="h6 text-secondary my-2">
-                                                {food.price.small && (
-                                                    <span className="text-success  ">
-                                                        ₹{food.price.small}/
-                                                    </span>
-                                                )}
-                                                {food.price.medium && (
-                                                    <span className="text-primary">
-                                                        ₹{food.price.medium}/
-                                                    </span>
-                                                )}
-                                                {food.price.large && (
-                                                    <span className="text-danger">
-                                                        ₹{food.price.large}
-                                                    </span>
-                                                )}
-                                            </div>
-                                            {!isAdmin && (
-                                                <div className="text-danger mt-2 mb-3">
-                                                    <button
-                                                        className="btn btn-outline-danger"
-                                                        onClick={() =>
-                                                            dispatch({
-                                                                type:
-                                                                    "SHOW_TOAST",
-                                                                payload: food,
-                                                            })
-                                                        }
-                                                    >
-                                                        Get this one
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )
-                            )}
-                    </div>
-                </div>
-            </div>
-            <hr />
-            <PizzaToast />
-            {/* //toast */}
-            <div
-                id="snackbar"
-                style={{ backgroundColor: "rgb(26, 163, 255)" }}
-            ></div>
-        </div>
-    );
+                                            /> */}
+											<div className="text-danger h6">
+												{food.name}
+											</div>
+											{food.description && (
+												<div className="text-muted font-weight-light h6 mx-1">
+													{food.description}.
+												</div>
+											)}
+											<div className="h6 text-secondary my-2">
+												{food.price.small && (
+													<span className="text-success  ">
+														₹{food.price.small}/
+													</span>
+												)}
+												{food.price.medium && (
+													<span className="text-primary">
+														₹{food.price.medium}/
+													</span>
+												)}
+												{food.price.large && (
+													<span className="text-danger">
+														₹{food.price.large}
+													</span>
+												)}
+											</div>
+											{!isAdmin && (
+												<div className="text-success mt-2 mb-3">
+													<button
+														className="btn btn-outline-success"
+														onClick={() =>
+															dispatch({
+																type: "SHOW_TOAST",
+																payload: food,
+															})
+														}
+													>
+														Get this one
+													</button>
+												</div>
+											)}
+										</div>
+									)
+							)}
+					</div>
+				</div>
+				<div
+					className="tab-pane fade"
+					id="non-veg"
+					role="tabpanel"
+					aria-labelledby="non-veg-tab"
+				>
+					<div className="basic-grid-for-veg">
+						{sideBeverages &&
+							sideBeverages.map(
+								(food) =>
+									!food.isVeg && (
+										<div
+											key={food.id}
+											className="card custom-card-for-veg border-success"
+										>
+											<LazyLoadImage
+												src={food.imageURL}
+												alt={food.name}
+												className="card-img-top"
+												effect="blur"
+											/>
+											{/* <img
+												// src={
+												//     `/images/side_orders/${food.name}.jpg` ||
+												//     `/images/side_orders/${food.name}.png`
+												// }
+												src={food.imageURL}
+												alt=""
+												className="card-img-top"
+											/> */}
+											<div className="text-danger h6">
+												{food.name}
+											</div>
+											{food.description && (
+												<div className="text-muted font-weight-light h6 mx-1">
+													{food.description}.
+												</div>
+											)}
+											<div className="h6 text-secondary my-2">
+												{food.price.small && (
+													<span className="text-success  ">
+														₹{food.price.small}/
+													</span>
+												)}
+												{food.price.medium && (
+													<span className="text-primary">
+														₹{food.price.medium}/
+													</span>
+												)}
+												{food.price.large && (
+													<span className="text-danger">
+														₹{food.price.large}
+													</span>
+												)}
+											</div>
+											{!isAdmin && (
+												<div className="text-danger mt-2 mb-3">
+													<button
+														className="btn btn-outline-danger"
+														onClick={() =>
+															dispatch({
+																type: "SHOW_TOAST",
+																payload: food,
+															})
+														}
+													>
+														Get this one
+													</button>
+												</div>
+											)}
+										</div>
+									)
+							)}
+					</div>
+				</div>
+			</div>
+			<hr />
+			<PizzaToast />
+			{/* //toast */}
+			<div
+				id="snackbar"
+				style={{backgroundColor: "rgb(26, 163, 255)"}}
+			></div>
+		</div>
+	);
 };
 
 export default SideBeverages;

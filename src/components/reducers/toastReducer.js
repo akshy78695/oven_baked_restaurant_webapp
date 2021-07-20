@@ -1,22 +1,22 @@
-import { SHOW_TOAST, HIDE_TOAST } from "./types";
+import {SHOW_TOAST, HIDE_TOAST} from "./types";
 
 const initialState = {
-    pizzaInfo: {},
+	pizzaInfo: {},
 };
 
-export default (state = initialState, { type, payload }) => {
-    switch (type) {
-        case SHOW_TOAST:
-            return {
-                ...state,
-                pizzaInfo: payload,
-            };
-        case HIDE_TOAST:
-            return {
-                ...state,
-                pizzaInfo: {},
-            };
-        default:
-            return state;
-    }
-};
+export default function variable(state = initialState, {type, payload}) {
+	switch (type) {
+		case SHOW_TOAST:
+			return {
+				...state,
+				pizzaInfo: payload,
+			};
+		case HIDE_TOAST:
+			return {
+				...state,
+				pizzaInfo: {},
+			};
+		default:
+			return state;
+	}
+}

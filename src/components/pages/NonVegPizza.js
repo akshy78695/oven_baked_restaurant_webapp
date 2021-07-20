@@ -1,151 +1,163 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import DisplayPhoto from "../layout/DisplayPhoto";
-import { useFirestoreConnect } from "react-redux-firebase";
-import { useSelector, useDispatch } from "react-redux";
+import {useFirestoreConnect} from "react-redux-firebase";
+import {useSelector, useDispatch} from "react-redux";
 import PizzaToast from "../layout/PizzaToast";
+import {LazyLoadImage} from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const NonVegPizza = () => {
-    const dispatch = useDispatch();
-    useFirestoreConnect([
-        {
-            collection: "products",
-            where: ["type", "==", "non-veg"],
-            storeAs: "non_veg",
-        },
-    ]);
-    const nonVegPizzas = useSelector(
-        (state) => state.firestore.ordered && state.firestore.ordered.non_veg
-    );
-    // const onClick = async (e) => {
-    //     for (let i = 0; i < nonVegPizzas.length; i++) {
-    //         let obj = {};
-    //         obj.name = nonVegPizzas[i].name;
-    //         obj.description = nonVegPizzas[i].desc;
-    //         obj.price = nonVegPizzas[i].price;
-    //         obj.type = "non-veg";
-    //         const storage = firebase.storage();
-    //         const storageRef = storage.ref();
-    //         const userUid = firebase.auth().currentUser.uid;
-    //         const starRef = storageRef.child(
-    //             `product_images/${nonVegPizzas[i].name}.jpg`
-    //         );
-    //         starRef
-    //             .getDownloadURL()
-    //             .then(async (url) => {
-    //                 obj.imageURL = url;
-    //                 console.log(obj);
-    //                 await firestore.collection("products").add(obj);
-    //             })
-    //             .catch((e) => {
-    //                 console.log(e);
-    //                 console.log(obj.name);
-    //             });
-    //     }
-    // };
-    const { isAdmin, pizzaAdded } = useSelector((state) => ({
-        isAdmin: state.helper.isAdmin && state.helper.isAdmin,
-        pizzaAdded: state.helper.pizzaAdded,
-    }));
-    useEffect(() => {
-        if (pizzaAdded) {
-            //show toast
-            let x = document.getElementById("snackbar");
-            x.className = "show";
-            x.innerHTML = "Added to your cart.";
-            setTimeout(function () {
-                x.className = x.className.replace("show", "");
-            }, 1700);
-            dispatch({ type: "SET_PIZZA_ADDED", payload: false });
-        }
-        //eslint-disable-next-line
-    }, [pizzaAdded]);
-    useEffect(() => {
-        window.scrollTo({ top: 0 });
-    }, []);
-    return (
-        <div>
-            <DisplayPhoto
-                photoForLgSize="/images/non-veg-lg-1280x521.jpg"
-                photoForSmSize="/images/non-veg-sm-960x1055.jpg"
-            />
-            <div className="h2 text-center text-danger mt-5 mb-3">
-                Non-Veg Pizza
-            </div>
-            {nonVegPizzas === undefined && (
-                <div className="text-center mb-4">
-                    <div
-                        className="spinner-border text-danger"
-                        style={{
-                            marginTop: "40px",
-                            width: "2.5rem",
-                            height: "2.5rem",
-                        }}
-                    >
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>
-            )}
-            {/* using basic-grid-for-veg because its same with non veg */}
-            <div className="basic-grid-for-veg">
-                {nonVegPizzas &&
-                    nonVegPizzas.length > 0 &&
-                    nonVegPizzas.map((pizza) => (
-                        <div
-                            key={pizza.id}
-                            className="card custom-card-for-veg border-danger"
-                        >
-                            <img
-                                // src={`/images/non_veg/${pizza.name}.jpg`}
-                                src={pizza.imageURL}
-                                alt=""
-                                className="card-img-top"
-                            />
-                            <div className="text-danger h6">{pizza.name}</div>
-                            <div className="text-muted font-weight-light h6 mx-1">
-                                {pizza.description}.
-                            </div>
-                            <div className="h6 text-secondary my-2">
-                                {pizza.price.small && (
-                                    <span className="text-success  ">
-                                        ₹{pizza.price.small}/
-                                    </span>
-                                )}
-                                {pizza.price.medium && (
-                                    <span className="text-primary">
-                                        ₹{pizza.price.medium}/
-                                    </span>
-                                )}
-                                {pizza.price.large && (
-                                    <span className="text-danger">
-                                        ₹{pizza.price.large}
-                                    </span>
-                                )}
-                            </div>
-                            {!isAdmin && (
-                                <div className="text-danger mt-2 mb-3">
-                                    <button
-                                        className="btn btn-outline-danger"
-                                        onClick={() =>
-                                            dispatch({
-                                                type: "SHOW_TOAST",
-                                                payload: pizza,
-                                            })
-                                        }
-                                    >
-                                        Get this one
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-            </div>
-            <hr />
-            <PizzaToast />
+	const dispatch = useDispatch();
+	useFirestoreConnect([
+		{
+			collection: "products",
+			where: ["type", "==", "non-veg"],
+			storeAs: "non_veg",
+		},
+	]);
+	const nonVegPizzas = useSelector(
+		(state) => state.firestore.ordered && state.firestore.ordered.non_veg
+	);
+	// const onClick = async (e) => {
+	//     for (let i = 0; i < nonVegPizzas.length; i++) {
+	//         let obj = {};
+	//         obj.name = nonVegPizzas[i].name;
+	//         obj.description = nonVegPizzas[i].desc;
+	//         obj.price = nonVegPizzas[i].price;
+	//         obj.type = "non-veg";
+	//         const storage = firebase.storage();
+	//         const storageRef = storage.ref();
+	//         const userUid = firebase.auth().currentUser.uid;
+	//         const starRef = storageRef.child(
+	//             `product_images/${nonVegPizzas[i].name}.jpg`
+	//         );
+	//         starRef
+	//             .getDownloadURL()
+	//             .then(async (url) => {
+	//                 obj.imageURL = url;
+	//                 console.log(obj);
+	//                 await firestore.collection("products").add(obj);
+	//             })
+	//             .catch((e) => {
+	//                 console.log(e);
+	//                 console.log(obj.name);
+	//             });
+	//     }
+	// };
+	const {isAdmin, pizzaAdded} = useSelector((state) => ({
+		isAdmin: state.helper.isAdmin && state.helper.isAdmin,
+		pizzaAdded: state.helper.pizzaAdded,
+	}));
+	useEffect(() => {
+		if (pizzaAdded) {
+			//show toast
+			let x = document.getElementById("snackbar");
+			x.className = "show";
+			x.innerHTML = "Added to your cart.";
+			setTimeout(function () {
+				x.className = x.className.replace("show", "");
+			}, 1700);
+			dispatch({type: "SET_PIZZA_ADDED", payload: false});
+		}
+		//eslint-disable-next-line
+	}, [pizzaAdded]);
+	useEffect(() => {
+		window.scrollTo({top: 0});
+	}, []);
+	return (
+		<div>
+			<DisplayPhoto
+				photoForLgSize="/images/non-veg-lg-1280x521.jpg"
+				photoForSmSize="/images/non-veg-sm-960x1055.jpg"
+			/>
+			<div className="h2 text-center text-danger mt-5 mb-3">
+				Non-Veg Pizza
+			</div>
+			{nonVegPizzas === undefined && (
+				<div className="text-center mb-4">
+					<div
+						className="spinner-border text-danger"
+						style={{
+							marginTop: "40px",
+							width: "2.5rem",
+							height: "2.5rem",
+						}}
+					>
+						<span className="sr-only">Loading...</span>
+					</div>
+				</div>
+			)}
+			{/* using basic-grid-for-veg because its same with non veg */}
+			<div className="basic-grid-for-veg">
+				{nonVegPizzas &&
+					nonVegPizzas.length > 0 &&
+					nonVegPizzas.map((pizza) => (
+						<div
+							key={pizza.id}
+							className="card custom-card-for-veg border-danger"
+						>
+							<LazyLoadImage
+								src={pizza.imageURL}
+								alt={pizza.name}
+								className="card-img-top"
+								effect="blue"
+							/>
 
-            {/* //toast */}
-            <div id="snackbar" style={{backgroundColor:"rgb(139, 64, 64)"}}></div>
-        </div>
-    );
+							{/* <img
+								// src={`/images/non_veg/${pizza.name}.jpg`}
+								src={pizza.imageURL}
+								alt=""
+								className="card-img-top"
+							/> */}
+							<div className="text-danger h6">{pizza.name}</div>
+							<div className="text-muted font-weight-light h6 mx-1">
+								{pizza.description}.
+							</div>
+							<div className="h6 text-secondary my-2">
+								{pizza.price.small && (
+									<span className="text-success  ">
+										₹{pizza.price.small}/
+									</span>
+								)}
+								{pizza.price.medium && (
+									<span className="text-primary">
+										₹{pizza.price.medium}/
+									</span>
+								)}
+								{pizza.price.large && (
+									<span className="text-danger">
+										₹{pizza.price.large}
+									</span>
+								)}
+							</div>
+							{!isAdmin && (
+								<div className="text-danger mt-2 mb-3">
+									<button
+										className="btn btn-outline-danger"
+										onClick={() =>
+											dispatch({
+												type: "SHOW_TOAST",
+												payload: pizza,
+											})
+										}
+									>
+										Get this one
+									</button>
+								</div>
+							)}
+						</div>
+					))}
+			</div>
+			<hr />
+			<PizzaToast />
+
+			{/* //toast */}
+			<div
+				id="snackbar"
+				style={{backgroundColor: "rgb(139, 64, 64)"}}
+			></div>
+		</div>
+	);
 };
 
 export default NonVegPizza;

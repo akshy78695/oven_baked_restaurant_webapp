@@ -1,127 +1,135 @@
 import React from "react";
 import DisplayPhoto from "../layout/DisplayPhoto";
 import "./pagesStyle.css";
-import { useEffect } from "react";
-import { useFirestoreConnect } from "react-redux-firebase";
-import { useSelector, useDispatch } from "react-redux";
+import {useEffect} from "react";
+import {useFirestoreConnect} from "react-redux-firebase";
+import {useSelector, useDispatch} from "react-redux";
 import PizzaToast from "../layout/PizzaToast";
+import {LazyLoadImage} from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const VegPizza = () => {
-    const dispatch = useDispatch();
-    useFirestoreConnect([
-        {
-            collection: "products",
-            where: ["type", "==", "veg"],
-            storeAs: "veg",
-        },
-    ]);
-    const { vegPizzas } = useSelector((state) => ({
-        vegPizzas: state.firestore.ordered && state.firestore.ordered.veg,
-    }));
-    const { isAdmin, pizzaAdded } = useSelector((state) => ({
-        isAdmin: state.helper.isAdmin && state.helper.isAdmin,
-        pizzaAdded: state.helper.pizzaAdded,
-    }));
-    useEffect(() => {
-        if (pizzaAdded) {
-            //show toast
-            let x = document.getElementById("snackbar");
-            x.className = "show";
-            x.innerHTML = "Added to your cart.";
-            setTimeout(function () {
-                x.className = x.className.replace("show", "");
-            }, 1700);
-            dispatch({ type: "SET_PIZZA_ADDED", payload: false });
-        }
-        //eslint-disable-next-line
-    }, [pizzaAdded]);
-    useEffect(() => window.scrollTo({ top: 0 }), []);
-    return (
-        <div>
-            <DisplayPhoto
-                photoForLgSize={"/images/veg-lg-1280x521.jpg"}
-                photoForSmSize={"/images/veg-sm-960x1055.jpg"}
-                isButton={false}
-            />
-            <div className="h2 text-success text-center mt-5 mb-3">
-                Veg Pizza
-            </div>
-            {vegPizzas === undefined && (
-                <div className="text-center mb-4">
-                    <div
-                        className="spinner-border text-success"
-                        style={{
-                            marginTop: "40px",
-                            width: "2.5rem",
-                            height: "2.5rem",
-                        }}
-                    >
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>
-            )}
-            <div className="basic-grid-for-veg">
-                {vegPizzas &&
-                    vegPizzas.map((pizza) => (
-                        <div
-                            key={pizza.id}
-                            className="card custom-card-for-veg border-success"
-                        >
-                            <img
-                                // src={`/images/veg/${pizza.name}.jpg`}
-                                src={pizza.imageURL}
-                                alt=""
-                                className="card-img-top"
-                            />
-                            <div className="text-success h6">{pizza.name}</div>
-                            <div className="text-muted font-weight-light h6 mx-1">
-                                {pizza.description}.
-                            </div>
-                            <div className="h6 text-secondary mt-2 mb-3">
-                                {pizza.price.small &&
-                                    pizza.price.small !== undefined && (
-                                        <span className="text-success  ">
-                                            ₹{pizza.price.small}/
-                                        </span>
-                                    )}
-                                {pizza.price.medium && (
-                                    <span className="text-primary">
-                                        ₹{pizza.price.medium}/
-                                    </span>
-                                )}
-                                {pizza.price.large && (
-                                    <span className="text-danger">
-                                        ₹{pizza.price.large}
-                                    </span>
-                                )}
-                            </div>
-                            {!isAdmin && (
-                                <div className="text-danger my-2">
-                                    <button
-                                        className="btn btn-outline-success"
-                                        onClick={() => {
-                                            dispatch({
-                                                type: "SHOW_TOAST",
-                                                payload: pizza,
-                                            });
-                                        }}
-                                    >
-                                        Get this one
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-            </div>
-            <hr />
-            <PizzaToast />
-            {/* //toast */}
-            <div
-                id="snackbar"
-                style={{ backgroundColor: "rgb(88, 139, 64)" }}
-            ></div>
-        </div>
-    );
+	const dispatch = useDispatch();
+	useFirestoreConnect([
+		{
+			collection: "products",
+			where: ["type", "==", "veg"],
+			storeAs: "veg",
+		},
+	]);
+	const {vegPizzas} = useSelector((state) => ({
+		vegPizzas: state.firestore.ordered && state.firestore.ordered.veg,
+	}));
+	const {isAdmin, pizzaAdded} = useSelector((state) => ({
+		isAdmin: state.helper.isAdmin && state.helper.isAdmin,
+		pizzaAdded: state.helper.pizzaAdded,
+	}));
+	useEffect(() => {
+		if (pizzaAdded) {
+			//show toast
+			let x = document.getElementById("snackbar");
+			x.className = "show";
+			x.innerHTML = "Added to your cart.";
+			setTimeout(function () {
+				x.className = x.className.replace("show", "");
+			}, 1700);
+			dispatch({type: "SET_PIZZA_ADDED", payload: false});
+		}
+		//eslint-disable-next-line
+	}, [pizzaAdded]);
+	useEffect(() => window.scrollTo({top: 0}), []);
+	return (
+		<div>
+			<DisplayPhoto
+				photoForLgSize={"/images/veg-lg-1280x521.jpg"}
+				photoForSmSize={"/images/veg-sm-960x1055.jpg"}
+				isButton={false}
+			/>
+			<div className="h2 text-success text-center mt-5 mb-3">
+				Veg Pizza
+			</div>
+			{vegPizzas === undefined && (
+				<div className="text-center mb-4">
+					<div
+						className="spinner-border text-success"
+						style={{
+							marginTop: "40px",
+							width: "2.5rem",
+							height: "2.5rem",
+						}}
+					>
+						<span className="sr-only">Loading...</span>
+					</div>
+				</div>
+			)}
+			<div className="basic-grid-for-veg">
+				{vegPizzas &&
+					vegPizzas.map((pizza) => (
+						<div
+							key={pizza.id}
+							className="card custom-card-for-veg border-success"
+						>
+							<LazyLoadImage
+								src={pizza.imageURL}
+								alt={pizza.name}
+								className="card-img-top"
+								effect="blur"
+							/>
+							{/* <img
+								// src={`/images/veg/${pizza.name}.jpg`}
+								className="card-img-top"
+								src={pizza.imageURL}
+								alt=""
+							/> */}
+							<div className="text-success h6">{pizza.name}</div>
+							<div className="text-muted font-weight-light h6 mx-1">
+								{pizza.description}.
+							</div>
+							<div className="h6 text-secondary mt-2 mb-3">
+								{pizza.price.small &&
+									pizza.price.small !== undefined && (
+										<span className="text-success  ">
+											₹{pizza.price.small}/
+										</span>
+									)}
+								{pizza.price.medium && (
+									<span className="text-primary">
+										₹{pizza.price.medium}/
+									</span>
+								)}
+								{pizza.price.large && (
+									<span className="text-danger">
+										₹{pizza.price.large}
+									</span>
+								)}
+							</div>
+							{!isAdmin && (
+								<div className="text-danger my-2">
+									<button
+										className="btn btn-outline-success"
+										onClick={() => {
+											dispatch({
+												type: "SHOW_TOAST",
+												payload: pizza,
+											});
+										}}
+									>
+										Get this one
+									</button>
+								</div>
+							)}
+						</div>
+					))}
+			</div>
+			<hr />
+			<PizzaToast />
+			{/* //toast */}
+			<div
+				id="snackbar"
+				style={{backgroundColor: "rgb(88, 139, 64)"}}
+			></div>
+		</div>
+	);
 };
 
 export default VegPizza;
